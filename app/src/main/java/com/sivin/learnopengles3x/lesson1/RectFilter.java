@@ -6,7 +6,9 @@ import android.opengl.GLES30;
 
 import com.sivin.learnopengles3x.common.GLESUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * @author Sivin 2018/3/26
@@ -20,10 +22,11 @@ public class RectFilter {
 
     //矩形顶点数组
     private float[] vertexArray = new float[]{
-            -1.0f, 1.0f, 0.0f,
-            -1.0f, -1.0f, 0.0f,
-            1.0f, -1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f
+
+            -0.5f,  0.5f,  0.0f,
+            -0.5f, -0.5f,  0.0f,
+            0.5f,  -0.5f,  0.0f,
+            0.5f,   0.5f,  0.0f
     };
 
     //纹理数组
@@ -32,12 +35,18 @@ public class RectFilter {
             0.0f, 1.0f,
             1.0f, 1.0f,
             1.0f, 0.0f,
-
     };
+
+
+    private int[] indexs = new int[]{
+        0,1,2,0,2,3
+    };
+
 
     //顶点数组缓冲对象
     private FloatBuffer mVertexBuffer;
     private FloatBuffer mTextureBuffer;
+    private IntBuffer mIndexBuffer;
 
     //作色器程序
     private int mGLPro;
@@ -53,13 +62,14 @@ public class RectFilter {
 
     public RectFilter(Context context) {
 
-
+        //初始化的第一步是获取shader对象
         mVertexBuffer = GLESUtils.createFloatBuffer(vertexArray);
         mTextureBuffer = GLESUtils.createFloatBuffer(textureArray);
-
+        mIndexBuffer = GLESUtils.createIntBuffer(indexs);
         mVertexShader = GLESUtils.loadAssetFileContent(VERTEX_SHADER, context.getResources());
         mFragmentShader = GLESUtils.loadAssetFileContent(FRAGMENT_SHADER, context.getResources());
 
+        //openGL渲染的很重要的一步就是获取mGLProgram,因为后面的所有设置,都是在这个program对象中完成的
         mGLPro = GLESUtils.createGLProgram(mVertexShader, mFragmentShader);
         if (mGLPro != 0) {
             mPosHandle = GLES30.glGetAttribLocation(mGLPro, "aPosition");
@@ -73,6 +83,9 @@ public class RectFilter {
     public void onDrawFragment() {
         if (!mIsInit) return;
         GLES30.glUseProgram(mGLPro);
-        GLES30.glDrawArrays(GLES20.GL_TRIANGLES,0,3);
+        /*
+         * 绘制的对象, index缓冲大小,缓冲类型,缓冲引用
+         */
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES,mIndexBuffer.capacity(),GLES30.GL_UNSIGNED_INT,mIndexBuffer);
     }
 }

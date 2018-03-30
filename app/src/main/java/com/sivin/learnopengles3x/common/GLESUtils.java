@@ -12,6 +12,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 /**
  * @author Sivin 2018/3/26
@@ -113,6 +114,24 @@ public class GLESUtils {
         fb.put(coords);
         fb.position(0);
         return fb;
+    }
+
+    public static ByteBuffer createByteBuffer(byte[] coords) {
+        ByteBuffer bb = ByteBuffer.allocateDirect(coords.length * FLOAT_SIZE);
+        bb.order(ByteOrder.nativeOrder());
+        bb.put(coords);
+        bb.position(0);
+        return bb;
+    }
+
+
+    public static IntBuffer createIntBuffer(int[] coords) {
+        ByteBuffer bb = ByteBuffer.allocateDirect(coords.length * FLOAT_SIZE);
+        bb.order(ByteOrder.nativeOrder());
+        IntBuffer ib = bb.asIntBuffer();
+        ib.put(coords);
+        ib.position(0);
+        return ib;
     }
 
     public static int createTextureIdOES() {

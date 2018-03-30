@@ -1,10 +1,8 @@
 package com.sivin.learnopengles3x.lesson1;
 
-import android.content.Context;
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
-
 
 import com.sivin.learnopengles3x.common.Render;
 
@@ -29,7 +27,7 @@ public class RectRender extends Render {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES30.glViewport(0, (height-width)/2,width,width);
+        GLES30.glViewport(0, 0, width, height);
     }
 
     @Override

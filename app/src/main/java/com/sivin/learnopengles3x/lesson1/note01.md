@@ -5,7 +5,7 @@
     `Filter`将`Render`类的`OpenGL ES`初始化代码, 渲染绘制代码, 资源释放代码,分离出去.
     这样,在同一个`OpenGL ES`渲染线程中,通过动态切换`Filter`子类对象,可以实现渲染效果的动态切换.
 
-#### `Filter`类的注意上下文环境
+#### `Filter`类的上下文环境
 
     `filter`是负责`OpenGL ES`相关的工作, 因此,凡是调用`OpenGL ES`API的代码, 必须要要保证代码运行的环境是在
     `OpenGL ES`线程中,这也是`OpenGL ES`代码环境的要求

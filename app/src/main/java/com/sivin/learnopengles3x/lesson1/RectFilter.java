@@ -6,7 +6,6 @@ import android.opengl.GLES30;
 
 import com.sivin.learnopengles3x.common.GLESUtils;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -18,7 +17,6 @@ public class RectFilter {
 
     private static final String VERTEX_SHADER = "rect_vs.glsl";
     private static final String FRAGMENT_SHADER = "rect_fs.glsl";
-
 
     //矩形顶点数组
     private float[] vertexArray = new float[]{

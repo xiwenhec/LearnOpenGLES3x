@@ -1,4 +1,4 @@
-package com.sivin.learnopengles3x.lesson1;
+package com.sivin.learnopengles3x.lesson01;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -71,7 +71,7 @@ public class RectFilter {
         mGLPro = GLESUtils.createGLProgram(mVertexShader, mFragmentShader);
         if (mGLPro != 0) {
             mPosHandle = GLES30.glGetAttribLocation(mGLPro, "aPosition");
-            GLES30.glVertexAttribPointer(mPosHandle, 3, GLES20.GL_FLOAT, false, 3 * GLESUtils.FLOAT_SIZE, mVertexBuffer);
+            GLES30.glVertexAttribPointer(mPosHandle, 3, GLES20.GL_FLOAT, false, 0, mVertexBuffer);
             GLES30.glEnableVertexAttribArray(mPosHandle);
             mIsInit = true;
         }

@@ -1,4 +1,4 @@
-package com.sivin.learnopengles3x.lesson1;
+package com.sivin.learnopengles3x.lesson01;
 
 import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;

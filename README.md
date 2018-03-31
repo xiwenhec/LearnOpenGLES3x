@@ -1,4 +1,4 @@
-#Learned openGL ES 3x
+# Learned openGL ES 3x
 
 #### lesson01: [OpenGL 的认知][1]
 

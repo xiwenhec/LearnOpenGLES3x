@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sivin.learnopengles3x.R;
-import com.sivin.learnopengles3x.lesson1.RectActivity;
+import com.sivin.learnopengles3x.lesson01.RectActivity;
+import com.sivin.learnopengles3x.lesson02.TextureActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,7 @@ public class MenuActivity extends AppCompatActivity {
         mContext = this;
         mDataList = new ArrayList<>();
         mDataList.add("绘制一个矩形");
+        mDataList.add("纹理映射");
     }
 
     private void initView() {
@@ -94,6 +96,10 @@ public class MenuActivity extends AppCompatActivity {
         switch (position){
             case 0:
                 intent = new Intent(this, RectActivity.class);
+                startActivity(intent);
+                break;
+            case 1:
+                intent = new Intent(this, TextureActivity.class);
                 startActivity(intent);
                 break;
         }

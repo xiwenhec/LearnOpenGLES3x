@@ -17,7 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".lesson1.RectActivity"/>
+        <activity android:name=".lesson01.RectActivity"/>
+        <activity android:name=".lesson02.TextureActivity"/>
     </application>
 
 </manifest>

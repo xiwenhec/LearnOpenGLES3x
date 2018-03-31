@@ -67,7 +67,12 @@ public class GLESUtils {
         return shader;
     }
 
-
+    /**
+     * 创建OpenGL ES着色器程序
+     * @param vertexSource 顶点着色器源码
+     * @param fragmentSource 片段着色器源码
+     * @return 如果一切正常,则返回非零的作色器程序引用Id,否则,返回0
+     */
     public static int createGLProgram(String vertexSource, String fragmentSource) {
         int vertexShader = loadShader(GLES30.GL_VERTEX_SHADER, vertexSource);
         if (vertexShader == 0) {
@@ -94,6 +99,13 @@ public class GLESUtils {
                 program = 0;
             }
         }
+
+        //shader编译成program之后,shader就没有用了,因此可以删除
+        GLES30.glDetachShader(program,vertexShader);
+        GLES30.glDetachShader(program,fragmentShader);
+        GLES30.glDeleteShader(vertexShader);
+        GLES30.glDeleteShader(fragmentShader);
+
         return program;
     }
 

@@ -1,12 +1,19 @@
 package com.sivin.learnopengles3x.lesson02;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
+import android.opengl.GLUtils;
 import android.util.Log;
 
+import com.sivin.learnopengles3x.R;
 import com.sivin.learnopengles3x.common.BaseFilter;
 import com.sivin.learnopengles3x.common.GLESUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
@@ -14,17 +21,19 @@ import java.nio.FloatBuffer;
  * @author Sivin 2018/3/31
  * Description:
  */
-public class TextureFilter extends BaseFilter{
+public class TextureFilter extends BaseFilter {
 
     private static final String TAG = "TextureFilter";
+
+    private Context mContext;
 
     //位置坐标顶点数组
     private float[] vertexArray = new float[]{
 
-            -0.5f, 0.5f, 0.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, -0.5f, 0.0f, 0.0f,
-            0.5f, 0.5f, 0.0f, 0.0f
+            -0.5f, 0.5f, 0.0f,
+            -0.5f, -0.5f, 0.0f,
+            0.5f, -0.5f, 0.0f,
+            0.5f, 0.5f, 0.0f,
     };
 
     //纹理坐标数组
@@ -63,10 +72,9 @@ public class TextureFilter extends BaseFilter{
     private int mTextureID;
 
 
-
-
-    public TextureFilter(String vertexShader, String fragmentShader) {
-      super(vertexShader,fragmentShader);
+    public TextureFilter(Context context, String vertexShader, String fragmentShader) {
+        super(vertexShader, fragmentShader);
+        mContext = context;
         filterInit();
     }
 
@@ -84,12 +92,12 @@ public class TextureFilter extends BaseFilter{
     public boolean onGLPrepare() {
         //获取着色器程序里的属性索引
         mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
-        mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "textureCoordinate");
+        mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "aTextureCoords");
 
 
-        //将缓冲的中的数据,传递到显卡中,同时告诉显卡该如何解释,这些数据
-        GLES30.glVertexAttribPointer(mPositionHandle, 4, GLES20.GL_FLOAT, false, 16, mVertexBuffer);
-        GLES30.glVertexAttribPointer(mTextureCoordHandle, 2, GLES20.GL_FLOAT, false, 0, mTextureCoordsBuffer);
+        //将缓冲的中的数据,传递到显卡中,同时告诉显卡该如何解释,这些数据,stride我们可以写0,也可以写计算偏移量
+        GLES30.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
+        GLES30.glVertexAttribPointer(mTextureCoordHandle, 2, GLES20.GL_FLOAT, false, 2*4, mTextureCoordsBuffer);
 
         //启用顶点属性
         GLES30.glEnableVertexAttribArray(mPositionHandle);
@@ -105,9 +113,27 @@ public class TextureFilter extends BaseFilter{
         GLES30.glUniform1ui(mTextureSamplerHandle, GLES30.GL_TEXTURE0);
         GLES30.glUseProgram(0);
 
+        initTexture();
         return true;
     }
 
+    private void initTexture() {
+        mTextureID = GLESUtils.createTextureId();
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
+
+        InputStream is = mContext.getResources().openRawResource(R.raw.cat);
+        Bitmap bm = BitmapFactory.decodeStream(is);
+        try {
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (bm != null) {
+            GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bm, 0);
+            bm.recycle();
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0);
+        }
+    }
 
     /**
      * 开始渲染
@@ -115,6 +141,10 @@ public class TextureFilter extends BaseFilter{
     @Override
     protected void onGLStartDraw() {
         GLES30.glUseProgram(mGLProgram);
+        if (mTextureID != 0) {
+            GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
+        }
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
     }
 

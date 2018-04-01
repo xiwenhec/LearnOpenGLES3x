@@ -37,8 +37,8 @@ public class MenuActivity extends AppCompatActivity {
     private void initData() {
         mContext = this;
         mDataList = new ArrayList<>();
-        mDataList.add("绘制一个矩形");
-        mDataList.add("纹理映射");
+        mDataList.add("lesson01:绘制一个矩形");
+        mDataList.add("lesson02:纹理映射");
     }
 
     private void initView() {

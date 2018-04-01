@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sivin.learnopengles3x.R;
-import com.sivin.learnopengles3x.lesson01.RectActivity;
-import com.sivin.learnopengles3x.lesson02.TextureActivity;
+import com.sivin.learnopengles3x.common.RenderActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,10 +46,10 @@ public class MenuActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recycle_view);
 
         mRecyclerView.setLayoutManager(
-                new LinearLayoutManager(mContext,LinearLayoutManager.VERTICAL,false));
+                new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 
         mRecyclerView.addItemDecoration(
-                new DefaultItemDecoration(this, DefaultItemDecoration.VERTICAL_LIST,0));
+                new DefaultItemDecoration(this, DefaultItemDecoration.VERTICAL_LIST, 0));
 
         mAdapter = new RecyclerView.Adapter<MyHolder>() {
             @Override
@@ -74,6 +73,7 @@ public class MenuActivity extends AppCompatActivity {
                 });
 
             }
+
             @Override
             public int getItemCount() {
                 return mDataList.size();
@@ -85,6 +85,7 @@ public class MenuActivity extends AppCompatActivity {
 
     class MyHolder extends RecyclerView.ViewHolder {
         private TextView title;
+
         MyHolder(View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.id_item_text);
@@ -92,17 +93,8 @@ public class MenuActivity extends AppCompatActivity {
     }
 
     private void onItemClick(int position) {
-        Intent intent = null;
-        switch (position){
-            case 0:
-                intent = new Intent(this, RectActivity.class);
-                startActivity(intent);
-                break;
-            case 1:
-                intent = new Intent(this, TextureActivity.class);
-                startActivity(intent);
-                break;
-
-        }
+        Intent intent = new Intent(this, RenderActivity.class);
+        intent.putExtra("filterType", position+1);
+        startActivity(intent);
     }
 }

@@ -19,7 +19,7 @@ public abstract class Render implements GLSurfaceView.Renderer {
     public Render(GLSurfaceView renderView) {
         this.renderView = renderView;
         this.mContext = renderView.getContext();
-        mFilter = getFilter();
+        mFilter = filter();
     }
 
 
@@ -41,7 +41,7 @@ public abstract class Render implements GLSurfaceView.Renderer {
 
 
 
-    protected abstract BaseFilter getFilter();
+    protected abstract BaseFilter filter();
 
     protected void onDestroy(){
         if(mFilter != null){

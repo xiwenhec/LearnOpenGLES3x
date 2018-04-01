@@ -14,9 +14,8 @@ public class MatrixTransFilter extends BaseFilter {
     private Context mContext;
 
 
-    public MatrixTransFilter(Context context,String vertexShader, String fragmentShader) {
-        super(vertexShader, fragmentShader);
-        mContext = context;
+    public MatrixTransFilter(Context context,String vShderName, String fShaderName) {
+        super(context,vShderName, fShaderName);
 
     }
 

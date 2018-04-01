@@ -1,5 +1,6 @@
 package com.sivin.learnopengles3x.common;
 
+import android.content.Context;
 import android.opengl.GLES30;
 
 import javax.microedition.khronos.opengles.GL;
@@ -9,6 +10,9 @@ import javax.microedition.khronos.opengles.GL;
  * Description:
  */
 public abstract class BaseFilter {
+
+    protected Context mContext;
+
     //顶点着色器和片段着色器源码
     private String mVertexShader;
     private String mFragmentShader;
@@ -21,9 +25,10 @@ public abstract class BaseFilter {
     //判断OpenGL的初始化工作是否全部正常完成
     private boolean mIsInit = false;
 
-    public BaseFilter(String vertexShader ,String fragmentShader) {
-        mVertexShader = vertexShader;
-        mFragmentShader = fragmentShader;
+    public BaseFilter(Context context , String vShaderName , String fShaderName) {
+        mContext = context;
+        mVertexShader = GLESUtils.loadAssetFileContent(vShaderName,context.getResources());
+        mFragmentShader = GLESUtils.loadAssetFileContent(fShaderName,context.getResources());
     }
 
 

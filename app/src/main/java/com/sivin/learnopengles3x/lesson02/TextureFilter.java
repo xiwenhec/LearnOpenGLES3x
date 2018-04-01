@@ -24,9 +24,6 @@ import java.nio.FloatBuffer;
 public class TextureFilter extends BaseFilter {
 
     private static final String TAG = "TextureFilter";
-
-    private Context mContext;
-
     //位置坐标顶点数组
     private float[] vertexArray = new float[]{
 
@@ -63,18 +60,12 @@ public class TextureFilter extends BaseFilter {
     private ByteBuffer mIndicesBuffer;
 
 
-    private int mPositionHandle;
-    private int mTextureCoordHandle;
-    private int mTextureSamplerHandle;
-
-
     //纹理Id
     private int mTextureID;
 
 
-    public TextureFilter(Context context, String vertexShader, String fragmentShader) {
-        super(vertexShader, fragmentShader);
-        mContext = context;
+    public TextureFilter(Context context, String vShaderName, String fShaderName) {
+        super(context,vShaderName, fShaderName);
         filterInit();
     }
 
@@ -91,8 +82,8 @@ public class TextureFilter extends BaseFilter {
     @Override
     public boolean onGLPrepare() {
         //获取着色器程序里的属性索引
-        mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
-        mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "aTextureCoords");
+        int mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
+        int mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "aTextureCoords");
 
 
         //将缓冲的中的数据,传递到显卡中,同时告诉显卡该如何解释,这些数据,stride我们可以写0,也可以写计算偏移量
@@ -105,7 +96,7 @@ public class TextureFilter extends BaseFilter {
 
 
         //获取uniform变量索引,这里我们获取的是纹理采样器对象
-        mTextureSamplerHandle = GLES30.glGetUniformLocation(mGLProgram, "textureSampler");
+        int mTextureSamplerHandle = GLES30.glGetUniformLocation(mGLProgram, "textureSampler");
 
         //下面我们为这个纹理采样器对象和纹理单元绑定,这样我的采样器就可以从改纹理单元从获取对应的文素.
         //由于这个变量是uniform修饰,因此在设置这个值的时候,需要先使用

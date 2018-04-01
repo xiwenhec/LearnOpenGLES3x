@@ -1,5 +1,6 @@
 package com.sivin.learnopengles3x.lesson01;
 
+import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
 
@@ -35,8 +36,8 @@ public class RectFilter extends BaseFilter{
     private int mPosHandle;
 
 
-    public RectFilter(String vertexShader ,String fragmentShader) {
-        super(vertexShader,fragmentShader);
+    public RectFilter(Context context , String vShaderName , String fShaderName) {
+        super(context,vShaderName,fShaderName);
         //初始化的第一步是获取shader对象
         mVertexBuffer = GLESUtils.createFloatBuffer(vertexArray);
         mIndexBuffer = GLESUtils.createIntBuffer(indexs);

@@ -16,6 +16,7 @@
 **本教程仅供参考**
 
 #### lesson01: [OpenGL 的认知][1]
+#### lesson02: [OpenGL是如何绘制纹理的][2]
 
 
 
@@ -46,3 +47,4 @@
 
 
 [1]: https://github.com/xiwenhec/LearnOpenGLES3x/blob/master/app/src/main/java/com/sivin/learnopengles3x/lesson1/note01.md
+[2]:https://github.com/xiwenhec/LearnOpenGLES3x/blob/master/app/src/main/java/com/sivin/learnopengles3x/lesson02/note02.md

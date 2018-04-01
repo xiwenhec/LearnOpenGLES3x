@@ -29,7 +29,7 @@
 
 ### 生成纹理名字(纹理Id)
 
-```
+```C
 /*
  * 第一个参数:想要生成的纹理数量
  * 第二个参数:存放纹理名称(纹理Id)的数组
@@ -56,7 +56,7 @@ glActiveTexture(GLenum texture)
 
 ### 将纹理名称和对应的纹理对象绑定
 
-```
+```C
 /*
  * 第一个参数:绑定的纹理目标
  * 第二个参数:纹理名字(纹理Id)
@@ -71,13 +71,13 @@ void glBindTexture(GLenum target, GLuint texture);
 
 >1. 设置过滤方式
 
-```
+```C
   glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_NEAREST);
   glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
 ```
 >2. 设置拉伸方式
 
-```
+```C
  //设置纹理S,T的拉伸方式
   glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);
   glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE);
@@ -87,7 +87,7 @@ void glBindTexture(GLenum target, GLuint texture);
 
 >3. 将为将纹理数据送入显存
 
-```
+```C
 
 void glTexImage2D(
     GLenum target,

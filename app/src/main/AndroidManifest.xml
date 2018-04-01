@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".lesson01.RectActivity"/>
         <activity android:name=".lesson02.TextureActivity"/>
+        <activity android:name=".lesson03.MatrixTrans" />
     </application>
 
 </manifest>

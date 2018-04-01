@@ -19,28 +19,10 @@ public class TextureRender extends Render {
     public TextureRender(GLSurfaceView renderView) {
         super(renderView);
     }
-
     @Override
     protected BaseFilter getFilter() {
         String mVertexShader = GLESUtils.loadAssetFileContent("lesson02_vs.glsl",renderView.getResources());
         String mFragmentShader = GLESUtils.loadAssetFileContent("lesson02_fs.glsl",renderView.getResources());
         return  new TextureFilter(mContext,mVertexShader,mFragmentShader);
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mFilter.onGLInit();
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES30.glViewport(0,0,width,height);
-        GLES30.glClearColor(0.5f,0.5f,0.5f,0.0f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl) {
-        mFilter.onDraw();
     }
 }

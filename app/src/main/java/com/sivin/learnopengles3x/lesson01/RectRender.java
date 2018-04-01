@@ -31,23 +31,4 @@ public class RectRender extends Render {
         return new RectFilter(mVertexShader,mFragmentShader);
     }
 
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        Log.e("RectRender", "onSurfaceCreated: " );
-        mFilter.onGLInit();
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        GLES30.glViewport(0, 0, width, height);
-        GLES30.glClearColor(0.5f,0.5f,0.5f,0.0f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT|GLES30.GL_DEPTH_BUFFER_BIT);
-    }
-
-    @Override
-    public void onDrawFrame(GL10 gl) {
-        mFilter.onDraw();
-    }
-
 }

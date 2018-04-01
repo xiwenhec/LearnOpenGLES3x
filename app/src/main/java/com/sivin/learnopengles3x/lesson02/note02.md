@@ -99,18 +99,18 @@ void glTexImage2D(
  	GLenum format,
  	GLenum type,
  	const GLvoid * data);
-
-
- 	target:当前绑定的纹理对象类型
- 	level: 纹理图细致程度.0表示基础原图,n表示第n个mipmap递减图
- 	internalFormat:纹理在`OpenGL`中存储的格式例如:GL_RGB,GL_RGBA8等,具体可以查阅API文档
- 	width:纹理的宽度
- 	height:纹理的高度
- 	border:这个值必须是0,没有理由api规定,也是历史遗留问题
-    format:纹理内存中的存储格式
-    type:像素数据的数据类型
-    data:内存中的数据指针
 ```
+
+ >* target:当前绑定的纹理对象类型
+ >* level: 纹理图细致程度.0表示基础原图,n表示第n个mipmap递减图
+ >* internalFormat:纹理在`OpenGL`中存储的格式例如:GL_RGB,GL_RGBA8等,具体可以查阅API文档
+ >* width:纹理的宽度
+ >* height:纹理的高度
+ >* border:这个值必须是0,没有理由api规定,也是历史遗留问题
+ >* format:纹理内存中的存储格式
+ >* type:像素数据的数据类型
+ >* data:内存中的数据指针
+
 
 调用玩这个函数之后,我们将就纹理从内存中传入显存中了,并且,我们可以通过,纹理的名字,来引用控制纹理的绘制渲染
 

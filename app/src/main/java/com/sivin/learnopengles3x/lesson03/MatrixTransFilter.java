@@ -9,9 +9,11 @@ import com.sivin.learnopengles3x.common.BaseFilter;
  * Description:
  */
 public class MatrixTransFilter extends BaseFilter {
-
     private static final String TAG = "MatrixTransFilter";
-    private Context mContext;
+
+
+
+
 
 
     public MatrixTransFilter(Context context,String vShderName, String fShaderName) {

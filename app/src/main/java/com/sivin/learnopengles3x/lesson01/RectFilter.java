@@ -7,6 +7,7 @@ import android.opengl.GLES30;
 import com.sivin.learnopengles3x.common.BaseFilter;
 import com.sivin.learnopengles3x.common.GLESUtils;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
@@ -24,30 +25,45 @@ public class RectFilter extends BaseFilter{
             0.5f,   0.5f,  0.0f
     };
 
-    private int[] indexs = new int[]{
+
+    private float[] colorArray = new float[]{
+            1.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f,
+            0.0f, 0.0f, 1.0f,
+            1.0f, 1.0f, 0.0f
+    };
+
+    private byte[] indices = new byte[]{
         0,1,2,0,2,3
     };
 
 
     //顶点数组缓冲对象
     private FloatBuffer mVertexBuffer;
-    private IntBuffer mIndexBuffer;
-
-    private int mPosHandle;
+    private FloatBuffer mColorBuffer;
+    private ByteBuffer mIndexBuffer;
 
 
     public RectFilter(Context context , String vShaderName , String fShaderName) {
         super(context,vShaderName,fShaderName);
         //初始化的第一步是获取shader对象
         mVertexBuffer = GLESUtils.createFloatBuffer(vertexArray);
-        mIndexBuffer = GLESUtils.createIntBuffer(indexs);
+        mColorBuffer  = GLESUtils.createFloatBuffer(colorArray);
+        mIndexBuffer = GLESUtils.createByteBuffer(indices);
     }
 
     @Override
     public boolean onGLPrepare() {
-        mPosHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
-        GLES30.glVertexAttribPointer(mPosHandle, 3, GLES20.GL_FLOAT, false, 0, mVertexBuffer);
-        GLES30.glEnableVertexAttribArray(mPosHandle);
+        int posHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
+        int colorHandle = GLES30.glGetAttribLocation(mGLProgram,"aColor");
+
+        GLES30.glVertexAttribPointer(posHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
+        GLES30.glVertexAttribPointer(colorHandle,3,GLES30.GL_FLOAT,false,3*4, mColorBuffer);
+
+        GLES30.glEnableVertexAttribArray(posHandle);
+        GLES30.glEnableVertexAttribArray(colorHandle);
+
+
         return true;
     }
 
@@ -57,6 +73,6 @@ public class RectFilter extends BaseFilter{
         /*
          * 绘制的对象, index缓冲大小,缓冲类型,缓冲引用
          */
-        GLES30.glDrawElements(GLES30.GL_TRIANGLES,mIndexBuffer.capacity(),GLES30.GL_UNSIGNED_INT,mIndexBuffer);
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES,mIndexBuffer.capacity(),GLES30.GL_UNSIGNED_BYTE,mIndexBuffer);
     }
 }

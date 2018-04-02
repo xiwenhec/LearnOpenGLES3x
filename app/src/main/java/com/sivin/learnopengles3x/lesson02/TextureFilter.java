@@ -43,7 +43,7 @@ public class TextureFilter extends BaseFilter {
 
     //绘制顺序索引数组
     private byte[] indices = new byte[]{
-            0, 1, 2, 0, 2, 3
+            0, 1, 2, 2,3,0
     };
 
 

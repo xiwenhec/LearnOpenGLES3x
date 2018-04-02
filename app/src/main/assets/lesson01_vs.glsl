@@ -1,10 +1,10 @@
 #version 300 es
 
-in vec4 aPosition;
-in vec4 aTextureCoords;
-out vec2 textureCoordinate;
+in vec3 aPosition;
+in vec3 aColor;
+out vec3 color;
 
 void main() {
-    gl_Position = vec4(aPosition.xyz,1.0);
-    textureCoordinate = aTextureCoords.st;
+    gl_Position = vec4(aPosition,1.0);
+    color = aColor;
 }

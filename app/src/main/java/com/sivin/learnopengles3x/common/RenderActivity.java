@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.sivin.learnopengles3x.R;
 import com.sivin.learnopengles3x.lesson01.RectFilter;
 import com.sivin.learnopengles3x.lesson02.TextureFilter;
+import com.sivin.learnopengles3x.lesson03.MatrixTransFilter;
 
 public class RenderActivity extends AppCompatActivity {
 
@@ -47,6 +48,12 @@ public class RenderActivity extends AppCompatActivity {
                 filter = new TextureFilter(this,
                         getShaderName(VERTEXT_SHADER, "02"),
                         getShaderName(FRAGMENT_SHADER, "02"));
+                break;
+
+            case 3:
+                filter = new MatrixTransFilter(this,
+                        getShaderName(VERTEXT_SHADER, "03"),
+                        getShaderName(FRAGMENT_SHADER, "03"));
                 break;
 
             default:

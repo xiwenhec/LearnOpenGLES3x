@@ -77,6 +77,8 @@ void glBindTexture(GLenum target, GLuint texture);
 ```
 >2. 设置拉伸方式
 
+纹理拉伸方式是:设这样来考虑的,比如说我们的顶点
+
 ```C
  //设置纹理S,T的拉伸方式
   glTexParameterf(GLES30.GL_TEXTURE_2D, GLES30.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE);

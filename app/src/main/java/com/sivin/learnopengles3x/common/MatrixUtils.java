@@ -13,8 +13,10 @@ public class MatrixUtils {
     private static float[] mProjectMatrix = new float[16];
 
     private static float[] sTempM = new float[16];
+
+
     //最终的MVP矩阵
-    public static float[] mMVPMatrix;
+    private static float[] mMVPMatrix;
 
 
     private static float[][] mStack = new float[10][16];
@@ -45,18 +47,18 @@ public class MatrixUtils {
 
 
     /**
-     * -----------单位矩阵---------------
+     * -----------单位矩阵-----------------
      * 由于openGL的矩阵是列主序矩阵,也就是说
      * float[16]数据,每四个数据应该以列优先编码
-     * <p>
+     *
      * 形如下面的单位矩阵在数组中应该是这样存放的
      * m[0]:1  m[4]:0  m[8]: 0  m[12]:0
      * m[1]:0  m[5]:1  m[9]: 0  m[13]:0
      * m[2]:0  m[6]:0  m[10]:1  m[14]:0
      * m[3]:0  m[7]:0  m[11]:0  m[15]:1
-     * <p>
+     *
      * ----------------------------------
-     * <p>
+     *
      * 1 0 0 0
      * 0 1 0 0
      * 0 0 1 0
@@ -84,7 +86,7 @@ public class MatrixUtils {
 
     /**
      * 将向量进行平移运算
-     * <p>
+     *
      * 矩阵T:
      * 1  0  0  x
      * 0  1  0  y
@@ -105,7 +107,7 @@ public class MatrixUtils {
     }
 
     /**
-     * 不要用android原生matrix提供的rotate函数,因为其内部使用的是空间模式变换
+     * 不要用android原生matrix提供的rotate函数,因为内部使用的是空间模式变换
      * 这里我们使用图形模式变换
      * @param angle
      * @param x
@@ -125,26 +127,43 @@ public class MatrixUtils {
     }
 
 
-    public static void scaleM(float x, float y, float z) {
-        Matrix.scaleM(mModelMatrix, 0, x, y, z);
+    /**
+     * 缩放矩阵
+     *
+     * dx 0   0   0
+     * 0  dy  0   0
+     * 0  0   dz  0
+     * 0  0   0   1
+     *
+     * @param factorX 缩放因子
+     * @param factorY 缩放因子
+     * @param factorZ 缩放因子
+     */
+    public static void scale(float factorX, float factorY, float factorZ) {
+        initMatrix(sTempM);
+        sTempM[0] = factorX;
+        sTempM[5] = factorY;
+        sTempM[10]= factorZ;
+        Matrix.multiplyMM(mModelMatrix,0,sTempM,0,mModelMatrix,0);
     }
 
 
     /**
      * 图像在坐标原点:绕X轴旋转的旋转矩阵 angle:
-     * <p>
+     *
      * 对于向量V(x,y,z)绕X旋转之后的坐标V'(x',y',z')
      * x' = x
      * y' = y*cosA + z*sinA
      * z' = -y*sinA + z*cosA
-     * <p>
+     *
      * 矩阵表示如下:
+     *
      * V' = R * V
      * 矩阵R:
-     * 1      0         0      0
-     * 0     cosA      sinA    0
-     * 0    -sinA      cosA    0
-     * 0      0         0      1
+     *  1      0         0      0
+     *  0     cosA      sinA    0
+     *  0    -sinA      cosA    0
+     *  0      0         0      1
      *
      * @param angle 旋转的角度
      */
@@ -169,16 +188,15 @@ public class MatrixUtils {
 
     /**
      * 图像在坐标原点:绕Y轴旋转的旋转矩阵 angle:
-     * <p>
+     *
      * 对于左边V(x,y)旋转之后的坐标V'(x',y')
-     * <p>
+     *
      * v' = R * v
      * 矩阵R:
-     * <p>
-     * cosA      0       sinA       0
-     * 0       1         0        0
-     * -sinA      0       cosA       0
-     * 0       0         0        1
+     *  cosA      0        sinA       0
+     *   0        1         0         0
+     * -sinA      0        cosA       0
+     *   0        0         0         1
      *
      * @param angle 旋转的角度
      */
@@ -201,16 +219,16 @@ public class MatrixUtils {
 
     /**
      * 图像在坐标原点:绕Z轴旋转的旋转矩阵 angle:
-     * <p>
+     *
      * 对于左边V(x,y)旋转之后的坐标V'(x',y')
-     * <p>
+     *
      * v' = R * v
      * 矩阵R:
-     * <p>
+     *
      * cosA   -sinA    0     0
      * sinA    cosA    0     0
-     * 0       0      1     0
-     * 0       0      0     1
+     *  0       0      1     0
+     *  0       0      0     1
      *
      * @param angle 旋转的角度
      */
@@ -231,6 +249,14 @@ public class MatrixUtils {
     }
 
 
+    public static void reflectX(){
+
+        initMatrix(sTempM);
+        sTempM[0] = -1;
+        Matrix.multiplyMM(mModelMatrix,0,sTempM,0,mModelMatrix,0);
+    }
+
+
     /**
      * 设置摄像机的位置
      *
@@ -245,7 +271,7 @@ public class MatrixUtils {
      * @param upz up z
      */
     public static void setCamera(
-            float cx,    //摄像机位置x
+            float cx,   //摄像机位置x
             float cy,   //摄像机位置y
             float cz,   //摄像机位置z
             float tx,   //摄像机目标点x
@@ -275,11 +301,11 @@ public class MatrixUtils {
     public static void setProjectFrustum(
 
             float left,        //near面的left
-            float right,    //near面的right
-            float bottom,   //near面的bottom
-            float top,      //near面的top
+            float right,       //near面的right
+            float bottom,      //near面的bottom
+            float top,         //near面的top
             float near,        //near面距离
-            float far       //far面距离
+            float far          //far面距离
     ) {
 
         Matrix.frustumM(mProjectMatrix, 0, left, right, bottom, top, near, far);
@@ -299,11 +325,11 @@ public class MatrixUtils {
     public static void setOrthoM(
 
             float left,        //near面的left
-            float right,    //near面的right
-            float bottom,   //near面的bottom
-            float top,      //near面的top
+            float right,       //near面的right
+            float bottom,      //near面的bottom
+            float top,         //near面的top
             float near,        //near面距离
-            float far       //far面距离
+            float far          //far面距离
 
     ) {
         Matrix.orthoM(mProjectMatrix, 0, left, right, bottom, top, near, far);

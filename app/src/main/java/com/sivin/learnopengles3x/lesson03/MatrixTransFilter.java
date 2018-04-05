@@ -43,6 +43,14 @@ public class MatrixTransFilter extends BaseFilter {
             1.0f, 0.0f
     };
 
+    private float[] linesArray = new float[]{
+            -1.0f,0.0f,0.0f,
+            1.0f ,0.0f,0.0f
+    };
+
+
+    private FloatBuffer lineBuffer ;
+
     //绘制顺序索引数组
     private byte[] indices = new byte[]{
             0, 1, 2, 2,3,0
@@ -56,6 +64,7 @@ public class MatrixTransFilter extends BaseFilter {
 
     //纹理Id
     private int mTextureID;
+    private int mPositionHandle;
 
 
     public MatrixTransFilter(Context context, String vShaderName, String fShaderName) {
@@ -70,18 +79,19 @@ public class MatrixTransFilter extends BaseFilter {
         mVertexBuffer = GLESUtils.createFloatBuffer(vertexArray);
         mTextureCoordsBuffer = GLESUtils.createFloatBuffer(textureCoordsArray);
         mIndicesBuffer = GLESUtils.createByteBuffer(indices);
+        lineBuffer = GLESUtils.createFloatBuffer(linesArray);
     }
 
 
     @Override
     public boolean onGLPrepare() {
         //获取着色器程序里的属性索引
-        int mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
+        mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
         int mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "aTextureCoord");
 
 
         //将缓冲的中的数据,传递到显卡中,同时告诉显卡该如何解释,这些数据,stride我们可以写0,也可以写计算偏移量
-        GLES30.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
+
         GLES30.glVertexAttribPointer(mTextureCoordHandle, 2, GLES20.GL_FLOAT, false, 2*4, mTextureCoordsBuffer);
 
         //启用顶点属性
@@ -129,15 +139,46 @@ public class MatrixTransFilter extends BaseFilter {
     @Override
     protected void onGLStartDraw() {
         GLES30.glUseProgram(mGLProgram);
+        GLES30.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
+
         if (mTextureID != 0) {
             GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
         }
+
+        //原始图模型,只是单纯的移动到左上角
+        MatrixUtils.pushMatrix();
+        MatrixUtils.translate(1.0f,1.0f,0.0f);
+        GLES30.glUniformMatrix4fv(mMvpMatrixHandle,1,false,MatrixUtils.getFinalMatrix(),0);
+        MatrixUtils.popMatrix();
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
+
+
+        //先将矩阵平移到原点位置,然后在绕y轴旋转,完成之后,在将模型平移到原来位置.
+        MatrixUtils.pushMatrix();
         MatrixUtils.translate(0.0f,0.0f,1.0f);
         MatrixUtils.rotate(30,0,1.0f,0.0f);
-        MatrixUtils.translate(0.0f,0.0f,-1.0f);
-
+        MatrixUtils.translate(-1.0f,1.0f,-1.0f);
         GLES30.glUniformMatrix4fv(mMvpMatrixHandle, 1, false, MatrixUtils.getFinalMatrix(), 0);
+        MatrixUtils.popMatrix();
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
+
+        //先放大,然后移动变换
+        MatrixUtils.pushMatrix();
+        MatrixUtils.scale(2.0f,2.0f,1.0f);
+        MatrixUtils.translate(-1.0f,-1.0f,0.0f);
+        GLES30.glUniformMatrix4fv(mMvpMatrixHandle, 1, false, MatrixUtils.getFinalMatrix(), 0);
+        MatrixUtils.popMatrix();
+        GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
+
+
+        //放大后镜像反转,然后移动到指定位置
+        MatrixUtils.pushMatrix();
+        MatrixUtils.scale(2.0f,2.0f,1.0f);
+        MatrixUtils.reflectX();
+        MatrixUtils.translate(1.1f,-1.0f,0.0f);
+        GLES30.glUniformMatrix4fv(mMvpMatrixHandle, 1, false, MatrixUtils.getFinalMatrix(), 0);
+        MatrixUtils.popMatrix();
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
 
     }

@@ -3,12 +3,15 @@
 in vec3 aPosition;
 in vec2 aTextureCoord;
 
+
+uniform mat4 mvpMatrix;
+
+
 out vec2 textureCoods;
-
-
 void main(){
 
-gl_Position = vec4(aPosition,1.0);
+gl_Position = mvpMatrix * vec4(aPosition,1.0);
+
 textureCoods = aTextureCoord;
 
 }

@@ -29,10 +29,10 @@ public class MatrixTransFilter extends BaseFilter {
     //位置坐标顶点数组
     private float[] vertexArray = new float[]{
 
-            -0.5f, 0.5f,  0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f,  0.0f,
-            0.5f, 0.5f,   0.0f,
+            -0.5f, 0.5f,  -1.0f,
+            -0.5f, -0.5f, -1.0f,
+            0.5f, -0.5f,  -1.0f,
+            0.5f, 0.5f,   -1.0f,
     };
 
     //纹理坐标数组
@@ -133,22 +133,12 @@ public class MatrixTransFilter extends BaseFilter {
             GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
         }
-
-//        MatrixUtils.pushMatrix();
-//        MatrixUtils.scale(0.5f, 0.5f, 0.5f);
-//        MatrixUtils.translateM(0.5f,0.5f,0.0f);
-//        GLES30.glUniformMatrix4fv(mMvpMatrixHandle, 1, false, MatrixUtils.getFinalMatrix(), 0);
-//        GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
-//        MatrixUtils.popMatrix();
-//        MatrixUtils.pushMatrix();
-//       MatrixUtils.translateM(0.0f,0.0f,1.0f);
-       MatrixUtils.rotateM(60,0,0,1);
-      // MatrixUtils.translateM(0,0,-1.0f);
-
+        MatrixUtils.translate(0.0f,0.0f,1.0f);
+        MatrixUtils.rotate(30,0,1.0f,0.0f);
+        MatrixUtils.translate(0.0f,0.0f,-1.0f);
 
         GLES30.glUniformMatrix4fv(mMvpMatrixHandle, 1, false, MatrixUtils.getFinalMatrix(), 0);
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
-      //  MatrixUtils.popMatrix();
 
     }
 
@@ -157,7 +147,7 @@ public class MatrixTransFilter extends BaseFilter {
         super.onGLSizeChanged(width, height);
         float ratio = width/height;
         //初始化模型矩阵
-        MatrixUtils.initModelMatrix();
+        MatrixUtils.setInitStack();
 
         //设置camera
         MatrixUtils.setCamera(0.0f, 0.0f, 2.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);

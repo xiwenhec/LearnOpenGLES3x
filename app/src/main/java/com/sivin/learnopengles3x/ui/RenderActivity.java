@@ -1,20 +1,20 @@
-package com.sivin.learnopengles3x.common;
+package com.sivin.learnopengles3x.ui;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.sivin.learnopengles3x.R;
-import com.sivin.learnopengles3x.lesson01.RectFilter;
-import com.sivin.learnopengles3x.lesson02.TextureFilter;
-import com.sivin.learnopengles3x.lesson03.MatrixTransFilter;
+import com.sivin.learnopengles3x.base.BaseFilter;
+import com.sivin.learnopengles3x.utils.GLESUtils;
+import com.sivin.learnopengles3x.filter.RectFilter;
+import com.sivin.learnopengles3x.filter.TextureFilter;
+import com.sivin.learnopengles3x.filter.MatrixTransFilter;
 
 public class RenderActivity extends AppCompatActivity {
 
-    private static final int VERTEXT_SHADER = 0;
-    private static final int FRAGMENT_SHADER = 1;
-    private String VERTEX_SHADER_FORMAT = "lesson%s_vs.glsl";
-    private String FRAGMENT_SHADER_FORMAT = "lesson%s_fs.glsl";
+    private Context mContext;
     private Render mRender;
     private int filterType;
 
@@ -23,6 +23,8 @@ public class RenderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_render);
+        mContext = getApplicationContext();
+
         filterType = getIntent().getIntExtra("filterType", 0);
         GLSurfaceView mRenderView = findViewById(R.id.render_view);
         mRenderView.setEGLContextClientVersion(3);
@@ -40,39 +42,34 @@ public class RenderActivity extends AppCompatActivity {
         BaseFilter filter = null;
         switch (filterType) {
             case 1:
-                filter = new RectFilter(this,
-                        getShaderName(VERTEXT_SHADER, "01"),
-                        getShaderName(FRAGMENT_SHADER, "01"));
+                filter = new RectFilter(
+                        getShader("rect_vs.glsl"),
+                        getShader("rect_fs.glsl"));
                 break;
             case 2:
-                filter = new TextureFilter(this,
-                        getShaderName(VERTEXT_SHADER, "02"),
-                        getShaderName(FRAGMENT_SHADER, "02"));
+                filter = new TextureFilter(
+                        getShader("texture_vs.glsl"),
+                        getShader("texture_fs.glsl"));
                 break;
 
             case 3:
-                filter = new MatrixTransFilter(this,
-                        getShaderName(VERTEXT_SHADER, "03"),
-                        getShaderName(FRAGMENT_SHADER, "03"));
+                filter = new MatrixTransFilter(
+                        getShader("trans_vs.glsl"),
+                        getShader("trans_fs.glsl"));
                 break;
 
             default:
-                filter = new RectFilter(this,
-                        getShaderName(VERTEXT_SHADER, "01"),
-                        getShaderName(FRAGMENT_SHADER, "01"));
+                filter = new RectFilter(
+                        getShader("rect_vs.glsl"),
+                        getShader("rect_fs.glsl"));
                 break;
         }
         return filter;
     }
 
 
-    public String getShaderName(int type, String index) {
-
-        if (type == VERTEXT_SHADER) {
-            return String.format(VERTEX_SHADER_FORMAT, index);
-        } else {
-            return String.format(FRAGMENT_SHADER_FORMAT, index);
-        }
+    public String getShader(String name) {
+       return GLESUtils.loadShaderResource(mContext,name);
     }
 
 

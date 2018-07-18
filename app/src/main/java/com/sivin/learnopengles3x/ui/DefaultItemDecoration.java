@@ -1,4 +1,4 @@
-package com.sivin.learnopengles3x.menu;
+package com.sivin.learnopengles3x.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;

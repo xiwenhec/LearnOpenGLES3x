@@ -1,4 +1,4 @@
-package com.sivin.learnopengles3x.menu;
+package com.sivin.learnopengles3x.ui;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sivin.learnopengles3x.R;
-import com.sivin.learnopengles3x.common.RenderActivity;
 
 import java.util.ArrayList;
 import java.util.List;

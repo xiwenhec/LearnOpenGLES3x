@@ -1,5 +1,6 @@
-package com.sivin.learnopengles3x.common;
+package com.sivin.learnopengles3x.utils;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
@@ -27,11 +28,16 @@ public class GLESUtils {
     public static final int NO_TEXTURE = -1;
     public static final int ON_DRAWN = 1;
 
-
-    public static String loadAssetFileContent(String fileName, Resources res) {
+    /**
+     * 加载作色器资源文件源码
+     * @param ctx context
+     * @param fileName 文件名
+     * @return shader源码文件
+     */
+    public static String loadShaderResource(Context ctx, String fileName) {
         String result = null;
         try {
-            InputStream is = res.getAssets().open(fileName);
+            InputStream is = ctx.getResources().getAssets().open(fileName);
 
             int ch = 0;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -50,7 +56,7 @@ public class GLESUtils {
     }
 
 
-    public static int loadShader(int shaderType, String shaderRes) {
+    private static int loadShader(int shaderType, String shaderRes) {
         int shader = GLES30.glCreateShader(shaderType);
         if (shader != 0) {
             GLES30.glShaderSource(shader, shaderRes);
@@ -105,7 +111,6 @@ public class GLESUtils {
         GLES30.glDetachShader(program,fragmentShader);
         GLES30.glDeleteShader(vertexShader);
         GLES30.glDeleteShader(fragmentShader);
-
         return program;
     }
 
@@ -146,7 +151,7 @@ public class GLESUtils {
         return ib;
     }
 
-    public static int createTextureIdOES() {
+    public static int createOESTextureId() {
         int[] textures = new int[1];
         //生成纹理对象id,然后绑定设置
         GLES30.glGenTextures(1, textures, 0);
@@ -183,7 +188,6 @@ public class GLESUtils {
         //解除绑定,等到使用的时候在绑定就行了
         GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0);
         return textures[0];
-
     }
 
 

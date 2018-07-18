@@ -1,4 +1,4 @@
-package com.sivin.learnopengles3x.common;
+package com.sivin.learnopengles3x.utils;
 
 import android.opengl.Matrix;
 

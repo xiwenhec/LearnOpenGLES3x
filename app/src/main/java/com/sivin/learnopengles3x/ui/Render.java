@@ -1,7 +1,9 @@
-package com.sivin.learnopengles3x.common;
+package com.sivin.learnopengles3x.ui;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+
+import com.sivin.learnopengles3x.base.BaseFilter;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -25,7 +27,7 @@ public abstract class Render implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mFilter.onGLInit();
+        mFilter.init();
     }
 
     @Override
@@ -35,11 +37,8 @@ public abstract class Render implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        mFilter.onDraw();
+        mFilter.draw();
     }
-
-
-
 
     protected abstract BaseFilter filter();
 

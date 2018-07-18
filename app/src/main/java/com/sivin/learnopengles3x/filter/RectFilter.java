@@ -1,15 +1,13 @@
-package com.sivin.learnopengles3x.lesson01;
+package com.sivin.learnopengles3x.filter;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
 
-import com.sivin.learnopengles3x.common.BaseFilter;
-import com.sivin.learnopengles3x.common.GLESUtils;
+import com.sivin.learnopengles3x.base.BaseFilter;
+import com.sivin.learnopengles3x.utils.GLESUtils;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 
 /**
  * @author Sivin 2018/3/26
@@ -44,8 +42,8 @@ public class RectFilter extends BaseFilter{
     private ByteBuffer mIndexBuffer;
 
 
-    public RectFilter(Context context , String vShaderName , String fShaderName) {
-        super(context,vShaderName,fShaderName);
+    public RectFilter(String vShaderName , String fShaderName) {
+        super(vShaderName,fShaderName);
         //初始化的第一步是获取shader对象
         mVertexBuffer = GLESUtils.createFloatBuffer(vertexArray);
         mColorBuffer  = GLESUtils.createFloatBuffer(colorArray);
@@ -53,22 +51,24 @@ public class RectFilter extends BaseFilter{
     }
 
     @Override
-    public boolean onGLPrepare() {
+    public boolean onInit() {
         int posHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
         int colorHandle = GLES30.glGetAttribLocation(mGLProgram,"aColor");
-
         GLES30.glVertexAttribPointer(posHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
         GLES30.glVertexAttribPointer(colorHandle,3,GLES30.GL_FLOAT,false,3*4, mColorBuffer);
-
         GLES30.glEnableVertexAttribArray(posHandle);
         GLES30.glEnableVertexAttribArray(colorHandle);
-
-
         return true;
     }
 
     @Override
-    protected void onGLStartDraw() {
+    public void onSizeChanged(int width, int height) {
+
+
+    }
+
+    @Override
+    protected void onDraw() {
         GLES30.glUseProgram(mGLProgram);
         /*
          * 绘制的对象, index缓冲大小,缓冲类型,缓冲引用

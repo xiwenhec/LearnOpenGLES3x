@@ -1,6 +1,5 @@
-package com.sivin.learnopengles3x.lesson02;
+package com.sivin.learnopengles3x.filter;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
@@ -9,8 +8,8 @@ import android.opengl.GLUtils;
 import android.util.Log;
 
 import com.sivin.learnopengles3x.R;
-import com.sivin.learnopengles3x.common.BaseFilter;
-import com.sivin.learnopengles3x.common.GLESUtils;
+import com.sivin.learnopengles3x.base.BaseFilter;
+import com.sivin.learnopengles3x.utils.GLESUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,11 +25,10 @@ public class TextureFilter extends BaseFilter {
     private static final String TAG = "TextureFilter";
     //位置坐标顶点数组
     private float[] vertexArray = new float[]{
-
-            -0.5f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f, 0.5f, 0.0f,
+            -1.0f, 1.0f, 0.0f,
+            -1.0f, -1.0f, 0.0f,
+            1.0f, -1.0f, 0.0f,
+            1.0f, 1.0f, 0.0f,
     };
 
     //纹理坐标数组
@@ -54,7 +52,6 @@ public class TextureFilter extends BaseFilter {
      *这样从缓冲里传递到GPU时,可以加快程序执行
      *
      */
-
     private FloatBuffer mVertexBuffer;
     private FloatBuffer mTextureCoordsBuffer;
     private ByteBuffer mIndicesBuffer;
@@ -62,10 +59,14 @@ public class TextureFilter extends BaseFilter {
 
     //纹理Id
     private int mTextureID;
+    //第二个纹理id
+    private int mTextureID2;
+    private int mTextureSamplerHandle;
+    private int mTextureSamplerHandle2;
 
 
-    public TextureFilter(Context context, String vShaderName, String fShaderName) {
-        super(context,vShaderName, fShaderName);
+    public TextureFilter(String vShaderName, String fShaderName) {
+        super(vShaderName, fShaderName);
         filterInit();
     }
 
@@ -80,45 +81,48 @@ public class TextureFilter extends BaseFilter {
 
 
     @Override
-    public boolean onGLPrepare() {
+    public boolean onInit() {
         //获取着色器程序里的属性索引
         int mPositionHandle = GLES30.glGetAttribLocation(mGLProgram, "aPosition");
         int mTextureCoordHandle = GLES30.glGetAttribLocation(mGLProgram, "aTextureCoords");
-
-
         //将缓冲的中的数据,传递到显卡中,同时告诉显卡该如何解释,这些数据,stride我们可以写0,也可以写计算偏移量
         GLES30.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 3*4, mVertexBuffer);
         GLES30.glVertexAttribPointer(mTextureCoordHandle, 2, GLES20.GL_FLOAT, false, 2*4, mTextureCoordsBuffer);
-
         //启用顶点属性
         GLES30.glEnableVertexAttribArray(mPositionHandle);
         GLES30.glEnableVertexAttribArray(mTextureCoordHandle);
 
 
         //获取uniform变量索引,这里我们获取的是纹理采样器对象
-        int mTextureSamplerHandle = GLES30.glGetUniformLocation(mGLProgram, "textureSampler");
+        mTextureSamplerHandle = GLES30.glGetUniformLocation(mGLProgram, "textureSampler");
+        mTextureSamplerHandle2 = GLES30.glGetUniformLocation(mGLProgram, "textureSampler2");
 
         //下面我们为这个纹理采样器对象和纹理单元绑定,这样我的采样器就可以从改纹理单元从获取对应的文素.
         //由于这个变量是uniform修饰,因此在设置这个值的时候,需要先使用
         GLES30.glUseProgram(mGLProgram);
-        GLES30.glUniform1ui(mTextureSamplerHandle, GLES30.GL_TEXTURE0);
+        GLES30.glUniform1ui(mTextureSamplerHandle, 0);
+        GLES30.glUniform1ui(mTextureSamplerHandle2, 1);
         GLES30.glUseProgram(0);
 
         initTexture();
         return true;
     }
 
+    @Override
+    public void onSizeChanged(int width, int height) {
+
+    }
+
     private void initTexture() {
         mTextureID = GLESUtils.createTextureId();
-        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
+        //setTextureData(mTextureID, R.raw.cat);
+        mTextureID2 = GLESUtils.createTextureId();
+        //setTextureData(mTextureID2, R.raw.jieke_00000);
+    }
 
-        InputStream is = mContext.getResources().openRawResource(R.raw.cat);
-        Bitmap bm = BitmapFactory.decodeStream(is);
-        try {
-            is.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+    private void setTextureData(Bitmap bm ,int textureId , int resId){
+        GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureId);
         if (bm != null) {
             GLUtils.texImage2D(GLES30.GL_TEXTURE_2D, 0, bm, 0);
             bm.recycle();
@@ -126,15 +130,20 @@ public class TextureFilter extends BaseFilter {
         }
     }
 
+
     /**
      * 开始渲染
      */
     @Override
-    protected void onGLStartDraw() {
+    protected void onDraw() {
         GLES30.glUseProgram(mGLProgram);
         if (mTextureID != 0) {
+            GLES30.glUniform1ui(mTextureSamplerHandle, 0);
+            GLES30.glUniform1ui(mTextureSamplerHandle2, 1);
             GLES30.glActiveTexture(GLES30.GL_TEXTURE0);
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID);
+            GLES30.glActiveTexture(GLES30.GL_TEXTURE1);
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, mTextureID2);
         }
         GLES30.glDrawElements(GLES30.GL_TRIANGLES, mIndicesBuffer.capacity(), GLES30.GL_UNSIGNED_BYTE, mIndicesBuffer);
     }

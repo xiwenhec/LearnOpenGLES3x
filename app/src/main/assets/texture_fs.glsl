@@ -25,6 +25,8 @@ out vec4 fragColor;
 void main(){
 
 //使用内建纹理获取函数获取采样器中指定纹理坐标的颜色值.
-fragColor =texture(textureSampler,textureCoordinate);;
+
+
+fragColor =texture(textureSampler,textureCoordinate);
 
 }
